@@ -14,17 +14,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     public List<Post> findAllByUserId(Long userId);
 
     @Query("""
-        SELECT p FROM Post p
-        WHERE 
-            p.user.id IN (
-                SELECT f.following.id FROM Follow f
-                WHERE f.follower.id = :userId
-                AND f.followStatus = 'FOLLOWING'
-            )
-        OR p.user.visible = true
-        ORDER BY p.createdAt DESC
-    """)
-    Page<Post> findFeed(@Param("user_id") Long userId, Pageable pageable);
+SELECT p FROM Post p 
+WHERE p.user.id IN (
+   SELECT f.following.id 
+   FROM Follow f 
+   WHERE f.follower.id = :userId 
+   AND f.followStatus = com.example.CRUD.entity.FollowStatus.FOLLOWING
+)
+OR p.user.visible = true 
+ORDER BY p.createdAt DESC
+""")
+    Page<Post> findFeed(@Param("userId") Long userId, Pageable pageable);
 
 
     Page<Post> findByContentContainsIgnoreCase(String content , Pageable pageable);
